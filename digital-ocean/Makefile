@@ -4,6 +4,16 @@ REGION=sfo2
 IMAGE=docker-18-04
 SSH_KEY_LOCATION=~/.ssh/${DROPLET_NAME}
 SSH_PASS ?= ""
+ENCRYPTED_SSH_KEY ?= true
+
+ifeq ($(ENCRYPTED_SSH_KEY),true)
+define SETUP_DEPS
+files/private.key
+endef
+else
+define SETUP_DEPS
+endef
+endif
 
 define DOCTL_CMD
 doctl --output json
@@ -32,7 +42,7 @@ endef
 .PHONY: instances/${DROPLET_NAME}.json
 
 ${SSH_KEY_LOCATION}:
-	ssh-keygen -t rsa -b 4096 -f  -P ${SSH_PASS}
+	ssh-keygen -t rsa -b 4096 -f $@ -P ${SSH_PASS}
 
 files/private.key:
 	gpg --export-secret-key -a ${GPG_USER} 1> $@ 2>> error.log
@@ -63,7 +73,7 @@ destroy: destroy-droplet destroy-ssh-key
 console:
 	${SSH_CMD}
 
-setup: files/private.key
+setup: ${SETUP_DEPS}
 	${SSH_CMD} apt-get install unzip
 	cd files && zip ../files.zip -r .
 	scp -i ${SSH_KEY_LOCATION} ./files.zip root@${INSTANCE_IP}:files.zip
@@ -76,3 +86,7 @@ instances/${DROPLET_NAME}.json:
 
 update: instances/${DROPLET_NAME}.json
 	cat $<
+
+clean:
+	-rm files/private.key
+	-rm files.zip

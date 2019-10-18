@@ -2,22 +2,30 @@
 
 set -e
 
-
 rm files.zip
 
-# Set up GPG
-export GPG_TTY=$(tty)
-gpg --batch --import private.key
+if [ -f private.key ]
+then
+  # Set up GPG
+  export GPG_TTY=$(tty)
+  gpg --batch --import private.key
 
-# Set up SSH key
-gpg --decrypt id_rsa.gpg > id_rsa
-eval `ssh-agent -s`
-chmod 400 id_rsa
-ssh-add id_rsa
+  # Set up SSH key
+  gpg --decrypt id_rsa.gpg > id_rsa
+  eval `ssh-agent -s`
+  chmod 400 id_rsa
+fi
 
-# Clone repos
-git clone git@github.com:benjaminbergstein/devbox.git
-git clone git@github.com:benjaminbergstein/website.git
+if [ -f id_rsa ]
+then
+  ssh-add id_rsa
+
+  # Clone repos
+  for repo in $(cat ./repos.txt)
+  do
+    git clone $repo
+  done
+fi
 
 # This is so changes to vimrc are commit-able
 rm .vimrc
