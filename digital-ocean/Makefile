@@ -30,10 +30,13 @@ endef
 ${SSH_KEY_LOCATION}:
 	ssh-keygen -t rsa -b 4096 -f  -P ${SSH_PASS}
 
+files/private.key:
+	gpg --export-secret-key -a ${GPG_USER} 1> $@ 2>> error.log
+
 deploy-ssh-key: ${SSH_KEY_LOCATION}
 	${DOCTL_CMD} compute ssh-key create ${DROPLET_NAME} \
 		--public-key "$$(cat ${SSH_KEY_LOCATION}.pub)" \
-		> ssh-keys/${DROPLET_NAME}.json
+		1> ssh-keys/${DROPLET_NAME}.json 2>> error.log
 
 destroy-ssh-key: ${SSH_KEY_LOCATION}
 	${DOCTL_CMD} compute ssh-key delete ${SSH_KEY_ID}
@@ -56,15 +59,16 @@ destroy: destroy-droplet destroy-ssh-key
 console:
 	${SSH_CMD}
 
-setup:
+setup: files/private.key
 	${SSH_CMD} apt-get install unzip
 	cd files && zip ../files.zip -r .
 	scp -i ${SSH_KEY_LOCATION} ./files.zip root@${INSTANCE_IP}:files.zip
 	${SSH_CMD} unzip files.zip
-	${SSH_CMD} rm files.zip
+	${SSH_CMD} -t /bin/bash setup.sh
 	rm files.zip
 
 instances/${DROPLET_NAME}.json:
 	${DOCTL_CMD} compute droplet get ${INSTANCE_ID} > $@
 
 update: instances/${DROPLET_NAME}.json
+	cat $<

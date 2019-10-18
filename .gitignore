@@ -1,1 +1,3 @@
 *.swp
+digital-ocean/files/private.key
+digital-ocean/error.log
