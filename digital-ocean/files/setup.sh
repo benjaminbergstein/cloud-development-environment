@@ -21,7 +21,7 @@ git clone git@github.com:benjaminbergstein/website.git
 
 # This is so changes to vimrc are commit-able
 rm .vimrc
-ln -s $(pwd)/devbox/digitalocean/files/.vimrc .vimrc
+ln -s /root/devbox/digitalocean/files/.vimrc .vimrc
 
 # Install deps
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -

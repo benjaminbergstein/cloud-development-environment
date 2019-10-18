@@ -9,16 +9,20 @@ define DOCTL_CMD
 doctl --output json
 endef
 
+define JQ
+jq --raw-output
+endef
+
 define INSTANCE_ID
-$$(cat ${DROPLET_INFO_FILE} | jq --raw-output '.[0].id')
+$$(cat ${DROPLET_INFO_FILE} | ${JQ} '.[0].id')
 endef
 
 define INSTANCE_IP
-$$(cat ${DROPLET_INFO_FILE} | jq --raw-output '.[0].networks.v4[0].ip_address')
+$$(cat ${DROPLET_INFO_FILE} | ${JQ} '.[0].networks.v4[0].ip_address')
 endef
 
 define SSH_KEY_ID
-$$(cat ssh-keys/${DROPLET_NAME}.json | jq --raw-output '.[0].id')
+$$(cat ssh-keys/${DROPLET_NAME}.json | ${JQ} '.[0].id')
 endef
 
 define SSH_CMD
