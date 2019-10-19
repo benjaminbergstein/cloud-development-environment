@@ -1,5 +1,5 @@
 DROPLET_NAME ?= dev-1
-DROPLET_INFO_FILE=instances/${DROPLET_NAME}.json
+DROPLET_INFO_FILE=droplets/${DROPLET_NAME}.json
 REGION=sfo2
 IMAGE=docker-18-04
 SSH_KEY_LOCATION=~/.ssh/${DROPLET_NAME}
@@ -39,7 +39,7 @@ define SSH_CMD
 ssh -i ${SSH_KEY_LOCATION} root@${INSTANCE_IP}
 endef
 
-.PHONY: instances/${DROPLET_NAME}.json
+.PHONY: ${DROPLET_INFO_FILE}
 
 ${SSH_KEY_LOCATION}:
 	ssh-keygen -t rsa -b 4096 -f $@ -P ${SSH_PASS}
@@ -65,7 +65,7 @@ deploy-droplet:
 
 destroy-droplet:
 	${DOCTL_CMD} compute droplet delete ${INSTANCE_ID}
-	rm instances/${DROPLET_NAME}.json
+	rm ${DROPLET_INFO_FILE}
 
 deploy: deploy-ssh-key deploy-droplet
 destroy: destroy-droplet destroy-ssh-key
@@ -81,10 +81,10 @@ setup: ${SETUP_DEPS}
 	${SSH_CMD} -t /bin/bash setup.sh
 	rm files.zip
 
-instances/${DROPLET_NAME}.json:
+${DROPLET_INFO_FILE}:
 	${DOCTL_CMD} compute droplet get ${INSTANCE_ID} > $@
 
-update: instances/${DROPLET_NAME}.json
+update: ${DROPLET_INFO_FILE}
 	cat $<
 
 clean:
