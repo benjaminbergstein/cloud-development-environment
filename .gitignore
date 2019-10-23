@@ -1,5 +1,6 @@
 *.swp
 digital-ocean/files/private.key
 digital-ocean/files/id_rsa
+digital-ocean/files/.gitconfig
 digital-ocean/files.zip
 digital-ocean/error.log

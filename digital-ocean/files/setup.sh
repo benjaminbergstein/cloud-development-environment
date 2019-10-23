@@ -4,8 +4,6 @@ set -e
 
 rm files.zip
 
-mv ./.sshrc ./.ssh/rc
-
 if [ -f private.key ]
 then
   # Set up GPG
