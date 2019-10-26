@@ -2,9 +2,14 @@ DROPLET_NAME ?= dev-1
 DROPLET_INFO_FILE=droplets/${DROPLET_NAME}.json
 REGION=sfo2
 IMAGE=docker-18-04
+SIZE ?= 1gb
+
 SSH_KEY_LOCATION=~/.ssh/${DROPLET_NAME}
 SSH_PASS ?= ""
 ENCRYPTED_SSH_KEY ?= true
+SNAPSHOT_NAME ?= $$(date +"%F")_${DROPLET_NAME}
+
+PORT ?= 80
 
 ifeq ($(ENCRYPTED_SSH_KEY),true)
 define SETUP_DEPS
@@ -61,17 +66,24 @@ deploy-droplet:
 		--ssh-keys ${SSH_KEY_ID} \
 		--region ${REGION} \
 		--image=${IMAGE} \
-		--size=1gb > ${DROPLET_INFO_FILE}
+		--size=${SIZE} > ${DROPLET_INFO_FILE}
 
 destroy-droplet:
 	${DOCTL_CMD} compute droplet delete ${INSTANCE_ID}
 	rm ${DROPLET_INFO_FILE}
 
-deploy: deploy-ssh-key deploy-droplet
+deploy: check deploy-ssh-key deploy-droplet
 destroy: destroy-droplet destroy-ssh-key
 
 console:
 	${SSH_CMD}
+
+upload:
+	cd uploads && zip ../uploads.zip -r .
+	scp -i ${SSH_KEY_LOCATION} ./uploads.zip root@${INSTANCE_IP}:uploads.zip
+	${SSH_CMD} unzip uploads.zip
+	${SSH_CMD} rm uploads.zip
+	rm ./uploads.zip
 
 setup: ${SETUP_DEPS}
 	${SSH_CMD} apt-get install unzip
@@ -81,11 +93,21 @@ setup: ${SETUP_DEPS}
 	${SSH_CMD} -t /bin/bash setup.sh
 	rm files.zip
 
+check:
+	if [ -f ${DROPLET_INFO_FILE} ]; then exit 1; fi
+
 ${DROPLET_INFO_FILE}:
 	${DOCTL_CMD} compute droplet get ${INSTANCE_ID} > $@
 
 update: ${DROPLET_INFO_FILE}
 	cat $<
+
+create-snapshot:
+	${DOCTL_CMD} compute droplet-action snapshot ${INSTANCE_ID} \
+		--snapshot-name ${SNAPSHOT_NAME}
+
+browse:
+	open http://${INSTANCE_IP}:${PORT}
 
 clean:
 	-rm files/private.key

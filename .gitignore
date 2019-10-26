@@ -4,3 +4,4 @@ digital-ocean/files/id_rsa
 digital-ocean/files/.gitconfig
 digital-ocean/files.zip
 digital-ocean/error.log
+digital-ocean/files/id_rsa.pub
