@@ -3,3 +3,4 @@ git@github.com:benjaminbergstein/website.git
 git@github.com:benjaminbergstein/pubsub.git
 git@github.com:benjaminbergstein/openrouteservice.git
 git@github.com:benjaminbergstein/us-electoral-map.git
+git@github.com:benjaminbergstein/graphql-bootcamp-2019.git

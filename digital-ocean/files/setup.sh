@@ -12,6 +12,8 @@ then
 
   # Set up SSH key
   gpg --decrypt id_rsa.gpg > id_rsa
+  gpg --decrypt secrets.bash.gpg > secrets.bash
+  rm secrets.bash.gpg id_rsa.gpg
   eval `ssh-agent -s`
   chmod 400 id_rsa
 fi
