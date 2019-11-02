@@ -1,4 +1,6 @@
-DROPLET_NAME ?= dev-1
+include ../shared.mk
+
+DROPLET_NAME ?= ${DEVBOX_NAME}
 DROPLET_INFO_FILE=droplets/${DROPLET_NAME}.json
 REGION=sfo2
 IMAGE=docker-18-04
@@ -57,6 +59,12 @@ deploy-ssh-key: ${SSH_KEY_LOCATION}
 		--public-key "$$(cat ${SSH_KEY_LOCATION}.pub)" \
 		1> ssh-keys/${DROPLET_NAME}.json 2>> error.log
 
+deploy-dns:
+	SERVER_NAME=${DROPLET_NAME} SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com deploy-record
+
+destroy-dns:
+	SERVER_NAME=${DROPLET_NAME} SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com destroy-record
+
 destroy-ssh-key: ${SSH_KEY_LOCATION}
 	${DOCTL_CMD} compute ssh-key delete ${SSH_KEY_ID}
 	rm ssh-keys/${DROPLET_NAME}.json
@@ -73,7 +81,7 @@ destroy-droplet:
 	rm ${DROPLET_INFO_FILE}
 
 deploy: check deploy-ssh-key deploy-droplet
-destroy: destroy-droplet destroy-ssh-key
+destroy: destroy-dns destroy-droplet destroy-ssh-key
 
 console:
 	${SSH_CMD}
@@ -85,7 +93,7 @@ upload:
 	${SSH_CMD} rm uploads.zip
 	rm ./uploads.zip
 
-setup: ${SETUP_DEPS}
+setup: ${SETUP_DEPS} deploy-dns
 	${SSH_CMD} apt-get install unzip
 	cd files && zip ../files.zip -r .
 	scp -i ${SSH_KEY_LOCATION} ./files.zip root@${INSTANCE_IP}:files.zip
@@ -107,7 +115,7 @@ create-snapshot:
 		--snapshot-name ${SNAPSHOT_NAME}
 
 browse:
-	open http://${INSTANCE_IP}:${PORT}
+	open http://${DROPLET_NAME}.${DOMAIN}:${PORT}
 
 clean:
 	-rm files/private.key
