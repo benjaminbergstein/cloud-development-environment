@@ -1,7 +1,8 @@
 include ../shared.mk
 
-DROPLET_NAME ?= ${DEVBOX_NAME}
+DROPLET_NAME=${DEVBOX_NAME}
 DROPLET_INFO_FILE=droplets/${DROPLET_NAME}.json
+DROPLET_HOSTNAME=${DROPLET_NAME}.${DOMAIN}
 REGION=sfo2
 IMAGE=docker-18-04
 SIZE ?= 1gb
@@ -95,10 +96,12 @@ upload:
 
 setup: ${SETUP_DEPS} deploy-dns
 	${SSH_CMD} apt-get install unzip
+	echo "export HOSTNAME=${DROPLET_HOSTNAME}" > files/meta.bash
 	cd files && zip ../files.zip -r .
 	scp -i ${SSH_KEY_LOCATION} ./files.zip root@${INSTANCE_IP}:files.zip
 	${SSH_CMD} unzip files.zip
 	${SSH_CMD} -t /bin/bash setup.sh
+	rm files/meta.bash
 	rm files.zip
 
 check:
@@ -115,7 +118,7 @@ create-snapshot:
 		--snapshot-name ${SNAPSHOT_NAME}
 
 browse:
-	open http://${DROPLET_NAME}.${DOMAIN}:${PORT}
+	open http://${DROPLET_HOSTNAME}:${PORT}
 
 clean:
 	-rm files/private.key
