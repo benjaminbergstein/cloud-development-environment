@@ -61,10 +61,12 @@ deploy-ssh-key: ${SSH_KEY_LOCATION}
 		1> ssh-keys/${DROPLET_NAME}.json 2>> error.log
 
 deploy-dns:
-	SERVER_NAME=${DROPLET_NAME} SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com deploy-record
+	HOSTNAME=${DROPLET_NAME} SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com deploy-record
+	HOSTNAME='*.${DROPLET_NAME}' SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com deploy-record
 
 destroy-dns:
-	SERVER_NAME=${DROPLET_NAME} SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com destroy-record
+	HOSTNAME=${DROPLET_NAME} SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com destroy-record
+	HOSTNAME='*.${DROPLET_NAME}' SERVER_IP=${INSTANCE_IP} ${MAKE} -C ../name.com destroy-record
 
 destroy-ssh-key: ${SSH_KEY_LOCATION}
 	${DOCTL_CMD} compute ssh-key delete ${SSH_KEY_ID}

@@ -2,7 +2,7 @@ include ../shared.mk
 
 NAME_USER ?= bennyjbergstein@gmail.com
 NAME_ENDPOINT ?= https://api.name.com
-HOSTNAME=${DEVBOX_NAME}
+HOSTNAME ?= ${DEVBOX_NAME}
 RECORD_INFO_FILE = records/${HOSTNAME}.json
 TTL ?= 30
 
