@@ -5,3 +5,4 @@ git@github.com:benjaminbergstein/openrouteservice.git
 git@github.com:benjaminbergstein/route-planner-client.git
 git@github.com:benjaminbergstein/us-electoral-map.git
 git@github.com:thedevs-network/kutt.git
+haproxy-router
