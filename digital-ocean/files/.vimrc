@@ -33,6 +33,9 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-clojure-highlight'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'vim-airline/vim-airline'
 call plug#end()
 
 " Destroy arrow keys in insert mode
@@ -56,6 +59,7 @@ noremap <C-K> <C-W><C-K>
 noremap <C-L> <C-W><C-L>
 
 noremap <F2> :NERDTreeToggle <Enter>
+noremap <F3> :NERDTreeFind <Enter>
 noremap <F8> :!rspec % <Enter>
 noremap <S-F8> :!! <Enter>
 
@@ -89,11 +93,17 @@ set colorcolumn=81
 au BufNewFile,BufRead *.scala set colorcolumn=130
 
 " set color scheme to solarized
+" syntax on
+" let g:solarized_termcolors=256
+" set t_Co=256
+" set background=dark
+" colorscheme onehalf
+
 syntax on
-let g:solarized_termcolors=256
 set t_Co=256
-set background=dark
-colorscheme solarized
+set cursorline
+colorscheme onehalfdark
+let g:airline_theme='onehalfdark'
 
 " to keep whitespace highlighting on recognized file types
 au FileType * highlight WhitespaceEOL ctermbg=240 guibg=red
