@@ -22,13 +22,13 @@ My dev environment running on DigitalOcean infrastructure.
 ### Create the SSH key and droplet instance:
 
 ```
-make -C digital-ocean deploy
+make -C deploy
 ```
 
 ### Wait a few minutes or run until the droplet has an IP:
 
 ```
-make -C digital-ocean update
+make -C update
 ```
 
 This updates the local JSON info file about the droplet.
@@ -36,13 +36,13 @@ This updates the local JSON info file about the droplet.
 ### Set up the instance:
 
 ```
-make -C digital-ocean setup
+make -C setup
 ```
 
 ### SSH in to the instance:
 
 ```
-make -C digital-ocean console
+make -C console
 ```
 
 ## Teardown
@@ -50,13 +50,13 @@ make -C digital-ocean console
 ### Destroy the droplet and SSH key:
 
 ```
-make -C digital-ocean destroy
+make -C destroy
 ```
 
 ## Github access.
 
 To set up access to github repositories, simply copy your ssh private key to
-`digital-ocean/files/id_rsa`. This file is gitignored to avoid committing this
+`digital-ocean/setup/files/id_rsa`. This file is gitignored to avoid committing this
 secret to the repository.
 
 If you do want to commit your ssh key to the repository, use [GPG](http://irtfweb.ifa.hawaii.edu/~lockhart/gpg/) to encrypt it.
