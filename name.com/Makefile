@@ -14,9 +14,21 @@ define AUTH_HEADER
 ${NAME_USER}:${NAME_API_TOKEN}
 endef
 
+ifeq ("${HOSTNAME}","-")
+define RECORD_BODY
+{"host":"","type":"A","answer":"${SERVER_IP}","ttl":${TTL}}
+endef
+else
+ifeq ("${HOSTNAME}","*.-")
+define RECORD_BODY
+{"host":"*","type":"A","answer":"${SERVER_IP}","ttl":${TTL}}
+endef
+else
 define RECORD_BODY
 {"host":"${HOSTNAME}","type":"A","answer":"${SERVER_IP}","ttl":${TTL}}
 endef
+endif
+endif
 
 define RECORD_ID
 $$(cat ${RECORD_INFO_FILE} | jq --raw-output '.id')

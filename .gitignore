@@ -1,4 +1,5 @@
 digital-ocean/error.log
-digital-ocean/files/secrets.bash
-digital-ocean/files/private.key
-digital-ocean/files/id_rsa.pub
+digital-ocean/setup/files/secrets.bash
+digital-ocean/setup/files/private.key
+digital-ocean/setup/files/id_rsa.pub
+digital-ocean/setup/uploads/*
