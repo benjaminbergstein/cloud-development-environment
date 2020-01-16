@@ -1,5 +1,5 @@
-export BASE_DIR=..
-include ../${BASE_DIR}/shared.mk
+export BASE_DIR=../..
+include ${BASE_DIR}/shared.mk
 
 deploy:
 	${DOCTL_CMD} compute volume create ${DROPLET_NAME}-volume \

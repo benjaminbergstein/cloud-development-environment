@@ -1,5 +1,5 @@
-export BASE_DIR=..
-include ../${BASE_DIR}/shared.mk
+export BASE_DIR=../..
+include ${BASE_DIR}/shared.mk
 ENCRYPTED_SSH_KEY ?= true
 
 ifeq ($(ENCRYPTED_SSH_KEY),true)
@@ -22,6 +22,9 @@ upload:
 	${SSH_CMD} unzip uploads.zip
 	${SSH_CMD} rm uploads.zip
 	rm ./uploads.zip
+
+download-%:
+	scp -i ${SSH_KEY_LOCATION} root@${DROPLET_IP}:$* ./downloads/$*
 
 files/private.key:
 	gpg --export-secret-key -a ${GPG_USER} 1> $@ 2>> error.log

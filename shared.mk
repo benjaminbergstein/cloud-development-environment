@@ -4,9 +4,10 @@ DOMAIN ?= wips.link
 DROPLET_NAME=${DEVBOX_NAME}
 SNAPSHOT_NAME ?= $$(date +"%F")_${DROPLET_NAME}
 
-DROPLET_CONFIG=${BASE_DIR}/droplets/${DROPLET_NAME}.json
-SSH_KEY_CONFIG=${BASE_DIR}/ssh-keys/${DROPLET_NAME}.json
-VOLUME_CONFIG=${BASE_DIR}/volumes/${DROPLET_NAME}.json
+DO_DIR=${BASE_DIR}/digital-ocean
+DROPLET_CONFIG=${DO_DIR}/droplets/${DROPLET_NAME}.json
+SSH_KEY_CONFIG=${DO_DIR}/ssh-keys/${DROPLET_NAME}.json
+VOLUME_CONFIG=${DO_DIR}/volumes/${DROPLET_NAME}.json
 
 define DROPLET_IP
 $$(KEY='.[0].networks.v4[0].ip_address' ${GET_DROPLET_CONFIG})
@@ -24,7 +25,7 @@ $$(pwd)
 endef
 
 define GET_CONFIG
-${MAKE} -C ../${BASE_DIR}/config parse
+${MAKE} -C ${BASE_DIR}/config parse
 endef
 
 define SSH_KEY_ID

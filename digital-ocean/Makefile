@@ -1,5 +1,5 @@
-BASE_DIR=.
-include ../shared.mk
+BASE_DIR=..
+include ${BASE_DIR}/shared.mk
 
 SUBDOMAIN_NAME ?= ${DROPLET_NAME}
 DROPLET_HOSTNAME=${DROPLET_NAME}.${DOMAIN}

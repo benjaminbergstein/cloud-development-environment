@@ -40,6 +40,10 @@ deploy-record:
 	  -X POST --data '${RECORD_BODY}' \
 	  > ${RECORD_INFO_FILE}
 
+list-records:
+	curl -u '${AUTH_HEADER}' \
+	  '${RECORDS_ENDPOINT}'
+
 destroy-record:
 	curl -u '${AUTH_HEADER}' \
 	  "${RECORDS_ENDPOINT}/${RECORD_ID}" \
