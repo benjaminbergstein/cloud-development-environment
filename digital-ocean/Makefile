@@ -8,6 +8,7 @@ IMAGE=docker-18-04
 SIZE ?= 1gb
 VOLUME_SIZE ?= 100gb
 
+SETUP_DIRS=droplets records ssh-keys downloads uploads
 PORT ?= 80
 
 .PHONY: ${DROPLET_CONFIG} setup
@@ -18,7 +19,7 @@ ${SSH_KEY_LOCATION}:
 deploy-ssh-key: ${SSH_KEY_LOCATION}
 	${DOCTL_CMD} compute ssh-key create ${DROPLET_NAME} \
 		--public-key "$$(cat ${SSH_KEY_LOCATION}.pub)" \
-		1> ssh-keys/${DROPLET_NAME}.json 2>> error.log
+		1> ${SSH_KEY_CONFIG} 2>> error.log
 
 deploy-dns:
 	HOSTNAME=${SUBDOMAIN_NAME} SERVER_IP=${DROPLET_IP} ${MAKE} -C ../name.com deploy-record
@@ -43,11 +44,22 @@ destroy-droplet:
 	${DOCTL_CMD} compute droplet delete ${DROPLET_ID}
 	rm ${DROPLET_CONFIG}
 
+init:
+	mkdir ${DATA_DIR}
+	cd ${DATA_DIR} && mkdir ${SETUP_DIRS}
+
+clean:
+	rm -rf ${DATA_DIR}
+
+create: init deploy
 deploy: check deploy-ssh-key deploy-droplet
 destroy: destroy-dns destroy-droplet destroy-ssh-key
 
 check:
 	if [ -f ${DROPLET_CONFIG} ]; then exit 1; fi
+
+which:
+	@echo ${DEVBOX_NAME}
 
 ${DROPLET_CONFIG}:
 	${DOCTL_CMD} compute droplet get ${DROPLET_ID} > $@

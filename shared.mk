@@ -4,10 +4,17 @@ DOMAIN ?= wips.link
 DROPLET_NAME=${DEVBOX_NAME}
 SNAPSHOT_NAME ?= $$(date +"%F")_${DROPLET_NAME}
 
+BOX_CONFIG_DIR ?= ${HOME}/.cloud-development-environment
+BOX_CONFIG_FILE ?= ${BOX_CONFIG_FILES}/config.json
+BOX_CONFIG_FILES ?= ${BOX_CONFIG_DIR}/files
+
 DO_DIR=${BASE_DIR}/digital-ocean
-DROPLET_CONFIG=${DO_DIR}/droplets/${DROPLET_NAME}.json
-SSH_KEY_CONFIG=${DO_DIR}/ssh-keys/${DROPLET_NAME}.json
-VOLUME_CONFIG=${DO_DIR}/volumes/${DROPLET_NAME}.json
+DATA_KEY ?= ${DEVBOX_NAME}
+BOX_DATA_DIR=${BASE_DIR}/data/boxes
+DATA_DIR ?= ${BOX_DATA_DIR}/${DATA_KEY}
+DROPLET_CONFIG=${DATA_DIR}/droplets/${DROPLET_NAME}.json
+SSH_KEY_CONFIG=${DATA_DIR}/ssh-keys/${DROPLET_NAME}.json
+VOLUME_CONFIG=${DATA_DIR}/volumes/${DROPLET_NAME}.json
 
 define DROPLET_IP
 $$(KEY='.[0].networks.v4[0].ip_address' ${GET_DROPLET_CONFIG})

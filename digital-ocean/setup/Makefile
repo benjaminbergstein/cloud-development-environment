@@ -4,7 +4,7 @@ ENCRYPTED_SSH_KEY ?= true
 
 ifeq ($(ENCRYPTED_SSH_KEY),true)
 define SETUP_DEPS
-files/private.key
+${DATA_DIR}/setup/private.key
 endef
 else
 define SETUP_DEPS
@@ -26,23 +26,26 @@ upload:
 download-%:
 	scp -i ${SSH_KEY_LOCATION} root@${DROPLET_IP}:$* ./downloads/$*
 
-files/private.key:
+${DATA_DIR}/setup/private.key:
 	gpg --export-secret-key -a ${GPG_USER} 1> $@ 2>> error.log
 
-setup: ${SETUP_DEPS}
+setup:
 	${MAKE} -C ${BASE_DIR} deploy-dns
 	${SSH_CMD} apt-get install unzip
-	echo "export HOSTNAME=${DROPLET_HOSTNAME}" > files/meta.bash
-	cd files && zip ../files.zip -r .
-	scp -i ${SSH_KEY_LOCATION} ./files.zip root@${DROPLET_IP}:files.zip
-	${SSH_CMD} unzip files.zip
+	cp -r ${BOX_CONFIG_FILES} ${DATA_DIR}/setup/
+	echo "export HOSTNAME=${DROPLET_HOSTNAME}" > ${DATA_DIR}/setup/meta.bash
+	cp ./setup.sh ${DATA_DIR}/setup/
+	${MAKE} ${SETUP_DEPS}
+	cd ${DATA_DIR}/setup && zip ../setup.zip -r .
+	scp -i ${SSH_KEY_LOCATION} ${DATA_DIR}/setup.zip root@${DROPLET_IP}:setup.zip
+	${SSH_CMD} unzip setup.zip
 	${SSH_CMD} -t /bin/bash setup.sh
-	rm files/meta.bash
-	rm files.zip
+	rm ${DATA_DIR}/setup/meta.bash
+	rm ${DATA_DIR}/setup.zip
 
 browse:
 	open http://${DROPLET_HOSTNAME}:${PORT}
 
 clean:
-	-rm files/private.key
-	-rm files.zip
+	-rm ${DATA_DIR}/setup/private.key
+	-rm ${DATA_DIR}/setup.zip

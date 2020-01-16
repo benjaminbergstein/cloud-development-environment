@@ -1,9 +1,10 @@
-include ../shared.mk
+BASE_DIR=..
+include ${BASE_DIR}/shared.mk
 
 NAME_USER ?= bennyjbergstein@gmail.com
 NAME_ENDPOINT ?= https://api.name.com
 HOSTNAME ?= ${DEVBOX_NAME}
-RECORD_INFO_FILE = records/${HOSTNAME}.json
+RECORD_INFO_FILE = ${DATA_DIR}/records/${HOSTNAME}.json
 TTL ?= 30
 
 define RECORDS_ENDPOINT
@@ -48,3 +49,4 @@ destroy-record:
 	curl -u '${AUTH_HEADER}' \
 	  "${RECORDS_ENDPOINT}/${RECORD_ID}" \
 	  -X DELETE
+	rm ${RECORD_INFO_FILE}

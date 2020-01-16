@@ -3,3 +3,6 @@ digital-ocean/setup/files/secrets.bash
 digital-ocean/setup/files/private.key
 digital-ocean/setup/files/id_rsa.pub
 digital-ocean/setup/uploads/*
+digital-ocean/setup/error.log
+data/boxes/*
+*.swp

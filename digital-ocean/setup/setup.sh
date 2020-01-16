@@ -2,7 +2,7 @@
 
 set -e
 
-rm files.zip
+rm setup.zip
 
 if [ -f private.key ]
 then
@@ -28,10 +28,6 @@ then
     git clone $repo
   done
 fi
-
-# This is so changes to vimrc are commit-able
-rm .vimrc
-ln -s /root/devbox/digital-ocean/files/.vimrc .vimrc
 
 # Install deps
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
