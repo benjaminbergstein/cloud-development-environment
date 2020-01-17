@@ -1,6 +1,6 @@
-# devbox
+# cloud-development-environment
 
-My dev environment running on DigitalOcean infrastructure.
+Simple to set up & configurable development machine in the digital ocean.
 
 # Contents
 
@@ -19,16 +19,36 @@ My dev environment running on DigitalOcean infrastructure.
 2. [Generate an access token](https://cloud.digitalocean.com/account/api/tokens/new)
 3. [Authenticate `doctl` with your access token](https://github.com/digitalocean/doctl#authenticating-with-digitalocean)
 
+### Create configuration files
+
+```
+mkdir ~/.cloud-development-environment
+echo '{}' > ~/.cloud-development-environment/config.json
+
+# All files in this directory will be copied to the droplet.
+mkdir ~/.cloud-development-environment/files
+
+# Required to checkout github repositories
+cp ~/.ssh/your_github_rsa ~/.cloud-development-environment/files/id_rsa
+
+# Any repos you want checked out go in repos.txt
+echo 'git@github.com:your/repo.git' >> ~/.cloud-development-environment/files/repos.txt
+
+# Any additional files you want, such as .bash_profile, .vimrc, etc.
+cp ~/.your-dotfiles ~/.cloud-development-environment/files
+cp ../any/other/files  ~/.cloud-development-environment/files
+```
+
 ### Create the SSH key and droplet instance:
 
 ```
-make -C deploy
+make create
 ```
 
 ### Wait a few minutes or run until the droplet has an IP:
 
 ```
-make -C update
+make update
 ```
 
 This updates the local JSON info file about the droplet.
@@ -36,13 +56,13 @@ This updates the local JSON info file about the droplet.
 ### Set up the instance:
 
 ```
-make -C setup
+make setup
 ```
 
 ### SSH in to the instance:
 
 ```
-make -C console
+make console
 ```
 
 ## Teardown
@@ -50,25 +70,5 @@ make -C console
 ### Destroy the droplet and SSH key:
 
 ```
-make -C destroy
+make destroy
 ```
-
-## Github access.
-
-To set up access to github repositories, simply copy your ssh private key to
-`digital-ocean/setup/files/id_rsa`. This file is gitignored to avoid committing this
-secret to the repository.
-
-If you do want to commit your ssh key to the repository, use [GPG](http://irtfweb.ifa.hawaii.edu/~lockhart/gpg/) to encrypt it.
-
-Once you have set up GPG, run:
-
-```
-gpg -e -r "YOUR-GPG-USER" ~/.ssh/your_id_rsa > digital-ocean/files/id_rsa.gpg
-```
-
-You can now safely commit the encrypted SSH key to the repository.
-
-In order to decrypt the SSH key, the Makefile will export your GPG key and
-upload along with other files to the droplet. It then imports the key and
-decrypts the SSH key.
