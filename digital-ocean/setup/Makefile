@@ -1,6 +1,7 @@
 export BASE_DIR=../..
 include ${BASE_DIR}/shared.mk
-ENCRYPTED_SSH_KEY ?= true
+
+ENCRYPTED_SSH_KEY=$$(KEY='.encryption' ${GET_USER_CONFIG})
 
 ifeq ($(ENCRYPTED_SSH_KEY),true)
 define SETUP_DEPS
@@ -33,7 +34,7 @@ ${DATA_DIR}/setup/private.key:
 skip:
 
 setup:
-	${MAKE} -C ${BASE_DIR} deploy-dns
+	${MAKE} -C ${BASE_DIR}/plugin before-setup
 	${SSH_CMD} apt-get install unzip
 	cp -r ${BOX_CONFIG_FILES} ${DATA_DIR}/setup/
 	echo "export HOSTNAME=${DROPLET_HOSTNAME}" > ${DATA_DIR}/setup/meta.bash

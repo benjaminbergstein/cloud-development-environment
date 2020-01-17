@@ -1,8 +1,6 @@
 BASE_DIR=..
 include ${BASE_DIR}/shared.mk
 
-SUBDOMAIN_NAME ?= ${DROPLET_NAME}
-
 SETUP_DIRS=droplets records ssh-keys downloads uploads
 
 .PHONY: setup
@@ -20,30 +18,26 @@ clean:
 	rm -rf ${DATA_DIR}
 
 deploy: check deploy-ssh-key deploy-droplet
-destroy: destroy-dns destroy-droplet destroy-ssh-key
 
 deploy-ssh-key: ${SSH_KEY_LOCATION}
 	${DOCTL_CMD} compute ssh-key create ${DROPLET_NAME} \
 		--public-key "$$(cat ${SSH_KEY_LOCATION}.pub)" \
 		1> ${SSH_KEY_CONFIG} 2>> error.log
 
-deploy-dns:
-	HOSTNAME=${SUBDOMAIN_NAME} SERVER_IP=${DROPLET_IP} ${MAKE} -C ../name.com deploy-record
-	HOSTNAME='*.${SUBDOMAIN_NAME}' SERVER_IP=${DROPLET_IP} ${MAKE} -C ../name.com deploy-record
-
-destroy-dns:
-	HOSTNAME=${SUBDOMAIN_NAME} SERVER_IP=${DROPLET_IP} ${MAKE} -C ../name.com destroy-record
-	HOSTNAME='*.${SUBDOMAIN_NAME}' SERVER_IP=${DROPLET_IP} ${MAKE} -C ../name.com destroy-record
-
-destroy-ssh-key: ${SSH_KEY_LOCATION}
-	${DOCTL_CMD} compute ssh-key delete ${SSH_KEY_ID}
-	rm ssh-keys/${DROPLET_NAME}.json
-
 deploy-droplet:
 	${MAKE} -C droplets
 
+destroy: destroy-droplet destroy-ssh-key destroy-plugins
+
+destroy-ssh-key: ${SSH_KEY_LOCATION}
+	${DOCTL_CMD} compute ssh-key delete ${SSH_KEY_ID}
+	-rm ssh-keys/${DROPLET_NAME}.json
+
 destroy-droplet:
 	${MAKE} -C droplets destroy
+
+destroy-plugins:
+	${MAKE} -C ../plugin after-destroy
 
 update:
 	${MAKE} -C droplets update

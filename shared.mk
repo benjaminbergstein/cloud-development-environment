@@ -1,12 +1,12 @@
 BASE_DIR ?= .
 ENVIRONMENT ?= dev-2
-DOMAIN ?= wips.link
+DOMAIN ?= $(shell KEY='.domainName' ${GET_USER_CONFIG})
 DROPLET_NAME=${ENVIRONMENT}
 SNAPSHOT_NAME ?= $$(date +"%F")_${DROPLET_NAME}
 REGION=sfo2
 
 BOX_CONFIG_DIR ?= ${HOME}/.cloud-development-environment
-BOX_CONFIG_FILE ?= ${BOX_CONFIG_FILES}/config.json
+BOX_CONFIG_FILE ?= ${BOX_CONFIG_DIR}/config.json
 BOX_CONFIG_FILES ?= ${BOX_CONFIG_DIR}/files
 
 DO_DIR=${BASE_DIR}/digital-ocean
@@ -35,6 +35,10 @@ endef
 
 define GET_CONFIG
 ${MAKE} -C ${BASE_DIR}/config parse
+endef
+
+define GET_USER_CONFIG
+CONFIG_FILE=${BOX_CONFIG_FILE} ${GET_CONFIG}
 endef
 
 define SSH_KEY_ID

@@ -23,7 +23,12 @@ Simple to set up & configurable development machine in the digital ocean.
 
 ```
 mkdir ~/.cloud-development-environment
-echo '{}' > ~/.cloud-development-environment/config.json
+echo '{"encryption": false, "plugins": []}' > ~/.cloud-development-environment/config.json
+
+# Any additional files you want, such as .bash_profile, .vimrc, etc.
+mkdir ~/.cloud-development-environment/files
+cp ~/.your-dotfiles ~/.cloud-development-environment/files
+cp ../any/other/files  ~/.cloud-development-environment/filesd-development-environment/config.json
 
 # All files in this directory will be copied to the droplet.
 mkdir ~/.cloud-development-environment/files
