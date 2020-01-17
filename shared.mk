@@ -10,7 +10,7 @@ BOX_CONFIG_FILES ?= ${BOX_CONFIG_DIR}/files
 
 DO_DIR=${BASE_DIR}/digital-ocean
 DATA_KEY ?= ${ENVIRONMENT}
-BOX_DATA_DIR=${BASE_DIR}/data/boxes
+BOX_DATA_DIR=${BASE_DIR}/data/environments
 DATA_DIR ?= ${BOX_DATA_DIR}/${DATA_KEY}
 DROPLET_CONFIG=${DATA_DIR}/droplets/${DROPLET_NAME}.json
 SSH_KEY_CONFIG=${DATA_DIR}/ssh-keys/${DROPLET_NAME}.json
