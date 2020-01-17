@@ -3,7 +3,6 @@ include ${BASE_DIR}/shared.mk
 
 .PHONY: ${DROPLET_CONFIG}
 
-REGION=sfo2
 IMAGE=docker-18-04
 SIZE ?= 1gb
 

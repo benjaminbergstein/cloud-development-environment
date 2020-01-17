@@ -3,6 +3,7 @@ ENVIRONMENT ?= dev-2
 DOMAIN ?= wips.link
 DROPLET_NAME=${ENVIRONMENT}
 SNAPSHOT_NAME ?= $$(date +"%F")_${DROPLET_NAME}
+REGION=sfo2
 
 BOX_CONFIG_DIR ?= ${HOME}/.cloud-development-environment
 BOX_CONFIG_FILE ?= ${BOX_CONFIG_FILES}/config.json

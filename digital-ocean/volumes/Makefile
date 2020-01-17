@@ -1,6 +1,8 @@
 export BASE_DIR=../..
 include ${BASE_DIR}/shared.mk
 
+VOLUME_SIZE ?= 100gb
+
 deploy:
 	${DOCTL_CMD} compute volume create ${DROPLET_NAME}-volume \
 		--region ${REGION} \

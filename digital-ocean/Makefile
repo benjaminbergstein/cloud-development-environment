@@ -2,7 +2,6 @@ BASE_DIR=..
 include ${BASE_DIR}/shared.mk
 
 SUBDOMAIN_NAME ?= ${DROPLET_NAME}
-VOLUME_SIZE ?= 100gb
 
 SETUP_DIRS=droplets records ssh-keys downloads uploads
 
