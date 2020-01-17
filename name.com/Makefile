@@ -1,7 +1,7 @@
 BASE_DIR=..
 include ${BASE_DIR}/shared.mk
 
-NAME_USER ?= bennyjbergstein@gmail.com
+NAME_USER=$$(KEY='.nameComUser' ${GET_USER_CONFIG})
 NAME_ENDPOINT ?= https://api.name.com
 HOSTNAME ?= ${ENVIRONMENT}
 RECORD_INFO_FILE = ${DATA_DIR}/records/${HOSTNAME}-${DOMAIN}.json
