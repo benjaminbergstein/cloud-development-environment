@@ -5,13 +5,13 @@ Simple to set up & configurable development machine in the digital ocean.
 # Contents
 
 - [Usage](https://github.com/benjaminbergstein/devbox#usage)
-- [Set Up](https://github.com/benjaminbergstein/devbox#set-up)
+- [First time set up](https://github.com/benjaminbergstein/devbox#first-time-set-up)
+- [Launch a development environment](https://github.com/benjaminbergstein/devbox#launch)
 - [Teardown](https://github.com/benjaminbergstein/devbox#teardown)
-- [Github Access](https://github.com/benjaminbergstein/devbox#github-access)
 
 # Usage
 
-## Set up
+## First-time set up
 
 ### Prerequisites
 
@@ -19,32 +19,36 @@ Simple to set up & configurable development machine in the digital ocean.
 2. [Generate an access token](https://cloud.digitalocean.com/account/api/tokens/new)
 3. [Authenticate `doctl` with your access token](https://github.com/digitalocean/doctl#authenticating-with-digitalocean)
 
-### Create configuration files
+### First-time Set Up
+
+Run:
 
 ```
-mkdir ~/.cloud-development-environment
-echo '{"encryption": false, "plugins": []}' > ~/.cloud-development-environment/config.json
+make install
+```
 
-# Any additional files you want, such as .bash_profile, .vimrc, etc.
-mkdir ~/.cloud-development-environment/files
-cp ~/.your-dotfiles ~/.cloud-development-environment/files
-cp ../any/other/files  ~/.cloud-development-environment/filesd-development-environment/config.json
+This will create the files at `~/.cloud-development-environment` required for a basic development box.
 
-# All files in this directory will be copied to the droplet.
-mkdir ~/.cloud-development-environment/files
+#### Configuration
 
-# Required to checkout github repositories
-cp ~/.ssh/your_github_rsa ~/.cloud-development-environment/files/id_rsa
+For Github access, copy your SSH private key to `~/.cloud-development-environment/files/id_rsa`
 
-# Any repos you want checked out go in repos.txt
+Add repositories you want cloned:
+
+```
 echo 'git@github.com:your/repo.git' >> ~/.cloud-development-environment/files/repos.txt
+```
 
-# Any additional files you want, such as .bash_profile, .vimrc, etc.
+Add other files or dotfiles you want uploaded:
+
+```
 cp ~/.your-dotfiles ~/.cloud-development-environment/files
 cp ../any/other/files  ~/.cloud-development-environment/files
 ```
 
-### Create the SSH key and droplet instance:
+## Launch
+
+### Create the droplet and SSH key for shell access:
 
 ```
 make create
