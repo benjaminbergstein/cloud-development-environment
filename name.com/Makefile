@@ -4,7 +4,7 @@ include ${BASE_DIR}/shared.mk
 NAME_USER ?= bennyjbergstein@gmail.com
 NAME_ENDPOINT ?= https://api.name.com
 HOSTNAME ?= ${ENVIRONMENT}
-RECORD_INFO_FILE = ${DATA_DIR}/records/${HOSTNAME}.json
+RECORD_INFO_FILE = ${DATA_DIR}/records/${HOSTNAME}-${DOMAIN}.json
 TTL ?= 30
 
 define RECORDS_ENDPOINT
