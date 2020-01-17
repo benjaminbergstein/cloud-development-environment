@@ -42,7 +42,7 @@ deploy-record:
 	  > ${RECORD_INFO_FILE}
 
 list-records:
-	curl -u '${AUTH_HEADER}' \
+	@curl -u '${AUTH_HEADER}' \
 	  '${RECORDS_ENDPOINT}'
 
 destroy-record:

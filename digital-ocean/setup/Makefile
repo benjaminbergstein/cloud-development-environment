@@ -8,6 +8,7 @@ ${DATA_DIR}/setup/private.key
 endef
 else
 define SETUP_DEPS
+skip
 endef
 endif
 
@@ -28,6 +29,8 @@ download-%:
 
 ${DATA_DIR}/setup/private.key:
 	gpg --export-secret-key -a ${GPG_USER} 1> $@ 2>> error.log
+
+skip:
 
 setup:
 	${MAKE} -C ${BASE_DIR} deploy-dns
