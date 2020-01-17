@@ -53,7 +53,7 @@ check:
 	if [ -f ${DROPLET_CONFIG} ]; then exit 1; fi
 
 which:
-	@echo ${DEVBOX_NAME}
+	@echo ${ENVIRONMENT}
 
 setup:
 	${MAKE} -C setup
