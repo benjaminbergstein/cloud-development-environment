@@ -14,12 +14,12 @@ then
   gpg --decrypt id_rsa.gpg > id_rsa
   gpg --decrypt secrets.bash.gpg > secrets.bash
   rm secrets.bash.gpg id_rsa.gpg
-  eval `ssh-agent -s`
-  chmod 400 id_rsa
 fi
 
 if [ -f id_rsa ]
 then
+  eval `ssh-agent -s`
+  chmod 400 id_rsa
   ssh-add id_rsa
 
   # Clone repos
@@ -27,12 +27,13 @@ then
   do
     git clone $repo
   done
+else
+  echo "No SSH key for Github, no repositories cloned."
 fi
 
 # Install deps
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
+# @TODO: Reduce to configuration.
 apt-get update && apt-get install -y nodejs yarn make
-
-yarn global add ngrok http-server
