@@ -21,7 +21,8 @@ define DROPLET_IP
 $$(KEY='.[0].networks.v4[0].ip_address' ${GET_DROPLET_CONFIG})
 endef
 
-SSH_KEY_LOCATION=~/.ssh/${DROPLET_NAME}
+SSH_BASE ?= ~/.ssh
+SSH_KEY_LOCATION=${SSH_BASE}/${DROPLET_NAME}
 SSH_PASS ?= ""
 
 define DOCTL_CMD
